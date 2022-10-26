@@ -1,4 +1,5 @@
 ﻿using NewsAPI.Core.Entities;
+using NewsAPI.Core.Helpers;
 using NewsAPI.Core.Interfaces;
 using NewsAPI.Core.Interfaces.Data;
 using NewsAPI.Core.Models;
@@ -20,9 +21,9 @@ public class NewsService : INewsService
         return await _repository.FirstAsync<NewsEntity>(x => x.Id == id);
     }
 
-    public IQueryable<NewsEntity> GetAll()
+    public PaginatedList<NewsEntity> GetAll(int? page)
     {
-        return _repository.GetAll<NewsEntity>();
+        return new PaginatedList<NewsEntity>(_repository.GetAll<NewsEntity>(), page ?? 0, 5);
     }
 
     public async Task<ModelOrError<NewsEntity>> AddAsync(NewsModel model)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using NewsAPI.SharedKernel;
 
 namespace NewsAPI.Core.Entities;
@@ -8,7 +9,8 @@ public class CategoryEntity : EntityBase
 {
     [Key]
     public int Id { get; set; }
-    public string Category { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-    public virtual ICollection<NewsEntity> News { get; set; } = new Collection<NewsEntity>();
+    [JsonIgnore]
+    public virtual ICollection<NewsEntity> News { get; } = new Collection<NewsEntity>();
 }

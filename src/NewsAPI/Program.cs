@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NewsAPI.Core;
 using NewsAPI.Core.Constant;
+using NewsAPI.Core.Entities;
 using NewsAPI.Infrastructure;
 using NewsAPI.Infrastructure.Data;
 using NewsAPI.Infrastructure.Settings;
@@ -16,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration).WriteTo.Console());
 builder.Services.AddEndpointsApiExplorer();
@@ -125,6 +127,12 @@ using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     // dataContext.Database.Migrate();
+
+    // In memory database data
+    _ = (dataContext?.Categories?.Add(new CategoryEntity { Id = 1, Name = "Economy", }));
+    _ = (dataContext?.Categories?.Add(new CategoryEntity { Id = 2, Name = "Sports", }));
+    _ = (dataContext?.Categories?.Add(new CategoryEntity { Id = 3, Name = "Science", }));
+    dataContext?.SaveChanges();
 }
 app.UseHsts(); // move to work in dev
 app.UseSwagger();

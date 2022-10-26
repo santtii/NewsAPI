@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NewsAPI.Core.Entities;
 using NewsAPI.Core.Extensions.FilterAttributes;
-using NewsAPI.Core.Helpers;
 using NewsAPI.Core.Interfaces;
 using NewsAPI.Core.Models;
 
@@ -24,9 +22,7 @@ public class NewsController : ControllerBase
     [HttpGet(), ValidateModel]
     public IActionResult Get(int? page)
     {
-        var users = _newsService.GetAll();
-        var paginatedUsers = new PaginatedList<NewsEntity>(users, page ?? 0, 5);
-        return Ok(paginatedUsers);
+        return Ok(_newsService.GetAll(page));
     }
 
 
