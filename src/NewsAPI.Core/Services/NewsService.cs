@@ -21,9 +21,19 @@ public class NewsService : INewsService
         return await _repository.FirstAsync<NewsEntity>(x => x.Id == id);
     }
 
-    public PaginatedList<NewsEntity> GetAll(int? page)
+    public async Task<PaginatedNewsModel> GetAllAsync(int? page = null)
     {
-        return new PaginatedList<NewsEntity>(_repository.GetAll<NewsEntity>(), page ?? 0, 5);
+        var paginatedData = new PaginatedList<NewsEntity>(_repository.GetAll<NewsEntity>(), page ?? 0, 5);
+        return await Task.FromResult(new PaginatedNewsModel
+        {
+            PageIndex = paginatedData.PageIndex,
+            PageSize = paginatedData.PageSize,
+            TotalCount = paginatedData.TotalCount,
+            TotalPages = paginatedData.TotalPages,
+            HasPreviousPage = paginatedData.HasPreviousPage,
+            HasNextPage = paginatedData.HasNextPage,
+            News = paginatedData
+        });
     }
 
     public async Task<ModelOrError<NewsEntity>> AddAsync(NewsModel model)

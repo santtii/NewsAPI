@@ -40,14 +40,14 @@ public class GetAllUnitTest
     }
 
     [Theory, AutoDomainData]
-    public void Verify_Returned_News([Frozen] Mock<IRepository> mockRepository, NewsService sut)
+    public async Task Verify_Returned_NewsAsync([Frozen] Mock<IRepository> mockRepository, NewsService sut)
     {
         // Arrange
         mockRepository.Setup(x => x.GetAll<NewsEntity>()).Returns(_news.AsQueryable());
         // Act
-        var result = sut.GetAll();
+        var result = await sut.GetAllAsync();
         // Assert
-        Assert.That(_news, Has.All.Matches<NewsEntity>(e => result.Any(r => e.Id == r.Id && e.CategoryId == r.CategoryId
+        Assert.That(_news, Has.All.Matches<NewsEntity>(e => result.News.Any(r => e.Id == r.Id && e.CategoryId == r.CategoryId
             && e.Image == r.Image && e.Title == r.Title && e.Body == r.Body && e.Date == r.Date && e.Visible == r.Visible)));
     }
 }

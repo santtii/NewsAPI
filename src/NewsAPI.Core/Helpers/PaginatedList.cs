@@ -15,7 +15,6 @@ public class PaginatedList<T> : List<T>
         PageSize = pageSize;
         TotalCount = source.Count();
         TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
-
         AddRange(source.Skip(PageIndex * PageSize).Take(PageSize));
     }
 }

@@ -16,7 +16,7 @@ public class AddAsyncUnitTest
 
     public AddAsyncUnitTest()
     {
-        _category = new CategoryEntity { Category = "Sports" };
+        _category = new CategoryEntity { Name = "Sports" };
     }
 
     [Theory, AutoDomainData]
